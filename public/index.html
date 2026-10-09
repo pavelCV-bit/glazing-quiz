@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Расчёт остекления балкона онлайн</title>
+<style>
+  :root{
+    --accent:#1f6feb;
+    --accent-soft:#e8f0fe;
+    --ink:#14213d;
+    --muted:#6b7280;
+    --line:#e5e7eb;
+    --bg:#f5f7fb;
+    --card:#ffffff;
+    --ok:#16a34a;
+    --err:#dc2626;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45}
+  .wrap{max-width:720px;margin:0 auto;padding:0 16px}
+
+  header{padding:18px 0}
+  .top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .brand{font-weight:800;font-size:18px;letter-spacing:.2px}
+  .brand span{color:var(--accent)}
+  .call{font-size:14px;font-weight:600;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:#fff;padding:8px 12px;border-radius:10px}
+
+  .hero{padding:8px 0 20px}
+  .hero h1{font-size:28px;line-height:1.2;font-weight:800;margin-bottom:10px}
+  .hero h1 em{font-style:normal;color:var(--accent)}
+  .hero p{color:var(--muted);font-size:16px;margin-bottom:14px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-size:13px;background:var(--accent-soft);color:var(--accent);padding:6px 10px;border-radius:999px;font-weight:600}
+
+  .card{background:var(--card);border-radius:18px;box-shadow:0 6px 24px rgba(20,33,61,.08);padding:20px;margin-bottom:20px}
+  .progress{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:6px}
+  .progress i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+  .stepno{font-size:13px;color:var(--muted);margin-bottom:14px}
+  .q{font-size:20px;font-weight:700;margin-bottom:14px}
+  .hint{font-size:13px;color:var(--muted);margin-top:8px}
+
+  .opts{display:grid;gap:10px}
+  .opts.two{grid-template-columns:1fr 1fr}
+  .opt{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--line);border-radius:14px;padding:14px 14px;font:inherit;color:inherit;cursor:pointer;transition:border-color .15s, background .15s, transform .05s}
+  .opt:hover{border-color:var(--accent);background:var(--accent-soft)}
+  .opt:active{transform:scale(.99)}
+  .opt b{display:block;font-size:16px}
+  .opt small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+
+  .size{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  label.f{display:block;font-size:13px;color:var(--muted);font-weight:600}
+  input[type=text],input[type=tel],input[type=number]{width:100%;margin-top:6px;padding:13px 14px;border:2px solid var(--line);border-radius:12px;font:inherit;font-size:17px;color:var(--ink);background:#fff;outline:none}
+  input:focus{border-color:var(--accent)}
+  .area{margin-top:12px;font-size:14px;color:var(--muted)}
+  .area b{color:var(--ink)}
+
+  .btn{display:block;width:100%;margin-top:16px;background:var(--accent);color:#fff;border:0;border-radius:14px;padding:15px;font:inherit;font-size:17px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none}
+  .btn:disabled{opacity:.6;cursor:default}
+  .btn.ghost{background:#fff;color:var(--ink);border:2px solid var(--line)}
+  .back{background:none;border:0;color:var(--muted);font:inherit;font-size:14px;margin-top:14px;cursor:pointer;padding:4px 0}
+  .err{color:var(--err);font-size:13px;margin-top:8px;min-height:18px}
+
+  .res-head{font-size:14px;color:var(--muted);margin-bottom:4px}
+  .res-price{font-size:34px;font-weight:800;line-height:1.1;margin-bottom:4px}
+  .res-note{font-size:13px;color:var(--muted);margin-bottom:16px}
+  .lines{border-top:1px solid var(--line)}
+  .line{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:15px}
+  .line span:first-child{color:var(--muted)}
+  .line span:last-child{font-weight:600;text-align:right}
+  .form{margin-top:20px;background:var(--accent-soft);border-radius:14px;padding:16px}
+  .form h3{font-size:17px;margin-bottom:4px}
+  .form p{font-size:14px;color:var(--muted);margin-bottom:12px}
+  .form label.f{margin-bottom:10px}
+
+  .done{text-align:center;padding:10px 0}
+  .done .ico{width:60px;height:60px;border-radius:50%;background:#dcfce7;color:var(--ok);font-size:32px;line-height:60px;margin:0 auto 12px}
+  .done h2{font-size:22px;margin-bottom:6px}
+  .done p{color:var(--muted)}
+
+  .how{display:grid;gap:12px;margin-bottom:20px}
+  .how div{background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 2px 10px rgba(20,33,61,.05)}
+  .how b{display:block;margin-bottom:2px}
+  .how span{font-size:14px;color:var(--muted)}
+
+  footer{padding:10px 0 40px;color:var(--muted);font-size:13px;text-align:center}
+  footer a{color:var(--muted)}
+  .contacts{display:flex;gap:10px;margin-bottom:14px}
+  .contacts .btn{margin-top:0;font-size:15px;padding:12px}
+
+  @media (max-width:420px){
+    .hero h1{font-size:24px}
+    .opts.two{grid-template-columns:1fr}
+    .res-price{font-size:28px}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="top">
+      <div class="brand" id="brand"></div>
+      <a class="call" id="callTop" href="#"></a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1>Узнайте стоимость <em>остекления</em> за 1 минуту</h1>
+    <p>Ответьте на 6 коротких вопросов и сразу получите примерную цену. Без звонков и ожидания, в любое время суток.</p>
+    <div class="chips">
+      <span class="chip">Расчёт мгновенно</span>
+      <span class="chip">Замер бесплатно</span>
+      <span class="chip">Гарантия на работы</span>
+    </div>
+  </section>
+
+  <section class="card" id="quiz" aria-live="polite"></section>
+
+  <section class="how">
+    <div><b>1. Считаете сами</b><span>Размеры, тип остекления и пожелания, результат на экране сразу.</span></div>
+    <div><b>2. Оставляете номер</b><span>Мастер получает вашу заявку с параметрами и расчётом.</span></div>
+    <div><b>3. Бесплатный замер</b><span>Приезжаем, уточняем детали и фиксируем точную цену в договоре.</span></div>
+  </section>
+
+  <footer>
+    <div class="contacts">
+      <a class="btn ghost" id="waBtn" href="#" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn ghost" id="tgBtn" href="#" target="_blank" rel="noopener">Telegram</a>
+    </div>
+    <div id="foot"></div>
+  </footer>
+</div>
+
+<script>
+/* =====================================================
+   НАСТРОЙКИ ШАБЛОНА — меняется только этот блок
+   ===================================================== */
+const CONFIG = {
+  company: "СтеклоДом",
+  city: "Житикара",
+  phone: "+7 700 000 00 00",
+  whatsapp: "77000000000",     // цифры без плюса
+  telegramUser: "username",     // ник мастера без @
+  accent: "#1f6feb",
+  currency: "₸",
+
+  // Цены (ориентиры, замените на цены клиента)
+  pricePerM2: { cold: 28000, warm: 52000, panoramic: 85000 },
+  objectK:   { balcony: 1, loggia: 1, flat: 0.9, house: 0.95 },
+  outwardK:  1.4,                 // коэффициент выноса (1.3–1.5)
+  insulationPerM2: 14000,
+  finishPerM2: 18000,
+  spread: 0.15                    // вилка ±15%
+};
+
+/* ---------- данные квиза ---------- */
+const OBJECTS = {
+  balcony: "Балкон", loggia: "Лоджия",
+  flat: "Окна в квартире", house: "Окна в доме"
+};
+const TYPES = {
+  cold: { name: "Холодное", sub: "Алюминиевый профиль, защита от дождя и ветра" },
+  warm: { name: "Тёплое", sub: "ПВХ-профиль, можно использовать зимой" },
+  panoramic: { name: "Панорамное", sub: "Стекло от пола до потолка, максимум света" }
+};
+const INSUL = {
+  none: "Не нужно",
+  ins: "Утепление стен",
+  both: "Утепление и чистовая отделка"
+};
+const WHEN = {
+  winter: "До зимы",
+  month: "В этом месяце",
+  look: "Пока прицениваюсь"
+};
+
+/* ---------- состояние ---------- */
+const TOTAL_STEPS = 6;
+let step = 1;
+const S = { object:null, len:"", hei:"", type:null, outward:null, insul:null, when:null };
+let sent = false;
+
+const $ = id => document.getElementById(id);
+const quiz = $("quiz");
+const fmt = n => Math.round(n).toLocaleString("ru-RU").replace(/\u00A0/g," ") + " " + CONFIG.currency;
+const round1000 = n => Math.round(n/1000)*1000;
+const esc = s => String(s).replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+
+/* ---------- шапка и футер ---------- */
+function initChrome(){
+  document.documentElement.style.setProperty("--accent", CONFIG.accent);
+  document.title = "Расчёт остекления — " + CONFIG.company;
+  $("brand").innerHTML = esc(CONFIG.company);
+  const tel = "tel:" + CONFIG.phone.replace(/[^\d+]/g,"");
+  $("callTop").href = tel; $("callTop").textContent = CONFIG.phone;
+  $("waBtn").href = "https://wa.me/" + CONFIG.whatsapp;
+  $("tgBtn").href = "https://t.me/" + CONFIG.telegramUser;
+  $("foot").textContent = CONFIG.company + " · " + CONFIG.city + " · " + CONFIG.phone;
+}
+
+/* ---------- расчёт ---------- */
+function calc(){
+  const len = parseFloat(String(S.len).replace(",", "."));
+  const hei = parseFloat(String(S.hei).replace(",", "."));
+  const area = len * hei;
+  let glass = area * CONFIG.pricePerM2[S.type] * CONFIG.objectK[S.object];
+  const lines = [];
+  lines.push(["Площадь остекления", area.toFixed(1).replace(".", ",") + " м²"]);
+  lines.push(["Остекление (" + TYPES[S.type].name.toLowerCase() + ")", fmt(glass)]);
+  if (S.outward === "yes"){
+    const extra = glass * (CONFIG.outwardK - 1);
+    glass += extra;
+    lines.push(["Вынос", "+ " + fmt(extra)]);
+  }
+  let total = glass;
+  if (S.insul === "ins" || S.insul === "both"){
+    const v = area * CONFIG.insulationPerM2;
+    total += v; lines.push(["Утепление стен", fmt(v)]);
+  }
+  if (S.insul === "both"){
+    const v = area * CONFIG.finishPerM2;
+    total += v; lines.push(["Чистовая отделка", fmt(v)]);
+  }
+  return {
+    area, lines, total,
+    low: round1000(total * (1 - CONFIG.spread)),
+    high: round1000(total * (1 + CONFIG.spread))
+  };
+}
+
+/* ---------- отрисовка ---------- */
+function head(){
+  const pct = Math.min(step, TOTAL_STEPS) / TOTAL_STEPS * 100;
+  return '<div class="progress"><i style="width:'+pct+'%"></i></div>' +
+         '<div class="stepno">Шаг '+step+' из '+TOTAL_STEPS+'</div>';
+}
+function backBtn(){ return step > 1 ? '<button class="back" data-back>← Назад</button>' : ""; }
+
+function render(){
+  if (step === 1){
+    quiz.innerHTML = head() + '<div class="q">Что будем остеклять?</div><div class="opts two">' +
+      Object.entries(OBJECTS).map(([k,v]) => '<button class="opt" data-set="object" data-v="'+k+'"><b>'+v+'</b></button>').join("") +
+      '</div>';
+  }
+  else if (step === 2){
+    quiz.innerHTML = head() + '<div class="q">Укажите размеры</div>' +
+      '<div class="size">' +
+      '<label class="f">Длина, м<input type="text" inputmode="decimal" id="len" placeholder="например, 3" value="'+esc(S.len)+'"></label>' +
+      '<label class="f">Высота, м<input type="text" inputmode="decimal" id="hei" placeholder="например, 1,5" value="'+esc(S.hei)+'"></label>' +
+      '</div><div class="area" id="areaOut"></div><div class="err" id="err"></div>' +
+      '<div class="hint">Не знаете точно? Укажите примерно, замер всё уточнит.</div>' +
+      '<button class="btn" id="next2">Далее</button>' + backBtn();
+    const upd = () => {
+      const l = parseFloat($("len").value.replace(",", ".")), h = parseFloat($("hei").value.replace(",", "."));
+      $("areaOut").innerHTML = (l>0 && h>0) ? 'Площадь: <b>' + (l*h).toFixed(1).replace(".", ",") + ' м²</b>' : "";
+    };
+    $("len").addEventListener("input", upd); $("hei").addEventListener("input", upd); upd();
+    $("next2").onclick = () => {
+      const l = parseFloat($("len").value.replace(",", ".")), h = parseFloat($("hei").value.replace(",", "."));
+      if (!(l >= 0.5 && l <= 15)) return $("err").textContent = "Длина: от 0,5 до 15 м";
+      if (!(h >= 0.5 && h <= 4))  return $("err").textContent = "Высота: от 0,5 до 4 м";
+      S.len = $("len").value; S.hei = $("hei").value; step++; render();
+    };
+  }
+  else if (step === 3){
+    quiz.innerHTML = head() + '<div class="q">Какой тип остекления?</div><div class="opts">' +
+      Object.entries(TYPES).map(([k,v]) => '<button class="opt" data-set="type" data-v="'+k+'"><b>'+v.name+'</b><small>'+v.sub+'</small></button>').join("") +
+      '</div>' + backBtn();
+  }
+  else if (step === 4){
+    quiz.innerHTML = head() + '<div class="q">Нужен вынос?</div><div class="opts two">' +
+      '<button class="opt" data-set="outward" data-v="yes"><b>Да</b><small>Увеличим площадь за счёт выноса</small></button>' +
+      '<button class="opt" data-set="outward" data-v="no"><b>Нет</b><small>По периметру балкона</small></button>' +
+      '</div>' + backBtn();
+  }
+  else if (step === 5){
+    quiz.innerHTML = head() + '<div class="q">Утепление и отделка</div><div class="opts">' +
+      Object.entries(INSUL).map(([k,v]) => '<button class="opt" data-set="insul" data-v="'+k+'"><b>'+v+'</b></button>').join("") +
+      '</div>' + backBtn();
+  }
+  else if (step === 6){
+    quiz.innerHTML = head() + '<div class="q">Когда нужно сделать?</div><div class="opts">' +
+      Object.entries(WHEN).map(([k,v]) => '<button class="opt" data-set="when" data-v="'+k+'"><b>'+v+'</b></button>').join("") +
+      '</div>' + backBtn();
+  }
+  else if (step === 7){ renderResult(); }
+}
+
+function renderResult(){
+  const r = calc();
+  quiz.innerHTML =
+    '<div class="res-head">Предварительная стоимость</div>' +
+    '<div class="res-price">'+fmt(r.low)+' – '+fmt(r.high)+'</div>' +
+    '<div class="res-note">Это ориентир. Точную цену фиксируем после бесплатного замера.</div>' +
+    '<div class="lines">' +
+      '<div class="line"><span>Объект</span><span>'+OBJECTS[S.object]+'</span></div>' +
+      r.lines.map(l => '<div class="line"><span>'+l[0]+'</span><span>'+l[1]+'</span></div>').join("") +
+    '</div>' +
+    '<form class="form" id="lead" novalidate>' +
+      '<h3>Получить точный расчёт</h3>' +
+      '<p>Оставьте номер, и мастер свяжется с вами, чтобы согласовать бесплатный замер.</p>' +
+      '<label class="f">Имя<input type="text" id="name" placeholder="Как к вам обращаться" autocomplete="name"></label>' +
+      '<label class="f">Телефон<input type="tel" id="tel" placeholder="+7 (___) ___-__-__" autocomplete="tel" inputmode="tel"></label>' +
+      '<div class="err" id="err"></div>' +
+      '<button class="btn" id="send" type="submit">Заказать бесплатный замер</button>' +
+    '</form>' +
+    '<button class="back" data-restart>Пересчитать заново</button>';
+
+  const tel = $("tel");
+  tel.addEventListener("input", () => {
+    let d = tel.value.replace(/\D/g,"");
+    if (d.startsWith("8")) d = "7" + d.slice(1);
+    if (!d.startsWith("7")) d = "7" + d;
+    d = d.slice(0,11);
+    let o = "+7";
+    if (d.length > 1) o += " (" + d.slice(1,4);
+    if (d.length >= 4) o += ")";
+    if (d.length > 4) o += " " + d.slice(4,7);
+    if (d.length > 7) o += "-" + d.slice(7,9);
+    if (d.length > 9) o += "-" + d.slice(9,11);
+    tel.value = o;
+  });
+  $("lead").addEventListener("submit", e => { e.preventDefault(); submitLead(r); });
+}
+
+/* ---------- отправка заявки ---------- */
+async function submitLead(r){
+  const name = $("name").value.trim();
+  const phone = $("tel").value;
+  if (phone.replace(/\D/g,"").length < 11) return $("err").textContent = "Введите номер полностью";
+  $("err").textContent = "";
+  const btn = $("send"); btn.disabled = true; btn.textContent = "Отправляем…";
+
+  const payload = {
+    name: name,
+    phone: phone,
+    object: OBJECTS[S.object] || S.object,
+    size: `${S.len} × ${S.hei} м (${r.area.toFixed(1).replace(".", ",")} м²)`,
+    type: TYPES[S.type]?.name || S.type,
+    outward: S.outward === "yes" ? "Да" : "Нет",
+    insul: INSUL[S.insul] || S.insul,
+    when: WHEN[S.when] || S.when,
+    priceRange: `${fmt(r.low)} – ${fmt(r.high)}`
+  };
+
+  try {
+    const res = await fetch("/api/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || "Ошибка при отправке");
+    }
+
+    done(name);
+  } catch (e){
+    console.error(e);
+    btn.disabled = false; btn.textContent = "Заказать бесплатный замер";
+    $("err").textContent = "Не удалось отправить. Позвоните нам: " + CONFIG.phone;
+  }
+}
+
+function done(name){
+  quiz.innerHTML =
+    '<div class="done"><div class="ico">✓</div>' +
+    '<h2>Заявка отправлена</h2>' +
+    '<p>' + (name ? esc(name) + ', мастер' : 'Мастер') + ' свяжется с вами в ближайшее время и согласует удобное время замера.</p></div>' +
+    '<a class="btn ghost" href="https://wa.me/' + CONFIG.whatsapp + '" target="_blank" rel="noopener">Написать в WhatsApp</a>';
+}
+
+/* ---------- события ---------- */
+quiz.addEventListener("click", e => {
+  const set = e.target.closest("[data-set]");
+  if (set){ S[set.dataset.set] = set.dataset.v; step++; render(); window.scrollTo({top: quiz.offsetTop - 12, behavior:"smooth"}); return; }
+  if (e.target.closest("[data-back]")){ step--; render(); return; }
+  if (e.target.closest("[data-restart]")){ step = 1; render(); return; }
+});
+
+initChrome();
+render();
+</script>
+</body>
+</html>
